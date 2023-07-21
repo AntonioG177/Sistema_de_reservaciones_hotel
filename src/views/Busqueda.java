@@ -6,6 +6,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import control.HuespedControl;
+import control.ReservaControl;
+import model.Huesped;
+import model.Reserva;
+
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -38,7 +44,9 @@ public class Busqueda extends JFrame {
 	private JLabel labelAtras;
 	private JLabel labelExit;
 	int xMouse, yMouse;
-
+	private HuespedControl huespedC;
+	private ReservaControl reservaC;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -59,6 +67,8 @@ public class Busqueda extends JFrame {
 	 * Create the frame.
 	 */
 	public Busqueda() {
+		this.huespedC = new HuespedControl();
+		this.reservaC = new ReservaControl();
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Busqueda.class.getResource("/imagenes/lupa2.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 910, 571);
@@ -105,12 +115,13 @@ public class Busqueda extends JFrame {
 		panel.addTab("Reservas", new ImageIcon(Busqueda.class.getResource("/imagenes/reservado.png")), scroll_table, null);
 		scroll_table.setVisible(true);
 		
+		listaReservas();
 		
 		tbHuespedes = new JTable();
 		tbHuespedes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tbHuespedes.setFont(new Font("Roboto", Font.PLAIN, 16));
 		modeloHuesped = (DefaultTableModel) tbHuespedes.getModel();
-		modeloHuesped.addColumn("Número de Huesped");
+		modeloHuesped.addColumn("Numero huesped");
 		modeloHuesped.addColumn("Nombre");
 		modeloHuesped.addColumn("Apellido");
 		modeloHuesped.addColumn("Fecha de Nacimiento");
@@ -120,6 +131,8 @@ public class Busqueda extends JFrame {
 		JScrollPane scroll_tableHuespedes = new JScrollPane(tbHuespedes);
 		panel.addTab("Huéspedes", new ImageIcon(Busqueda.class.getResource("/imagenes/pessoas.png")), scroll_tableHuespedes, null);
 		scroll_tableHuespedes.setVisible(true);
+		
+		listaHuespedes();
 		
 		JLabel lblNewLabel_2 = new JLabel("");
 		lblNewLabel_2.setIcon(new ImageIcon(Busqueda.class.getResource("/imagenes/Ha-100px.png")));
@@ -262,6 +275,34 @@ public class Busqueda extends JFrame {
 		setResizable(false);
 	}
 	
+	private void listaHuespedes() {
+		List<Huesped> huespedes = huespedC.listar();
+		
+		huespedes.forEach(huesped -> modeloHuesped.addRow(
+				new Object[] {
+						huesped.getId(),
+						huesped.getNombre(),
+						huesped.getApellido(),
+						huesped.getFechaN(),
+						huesped.getNacionalidad(),
+						huesped.getTelefono(),
+						huesped.getReservaId()
+				}));
+	}
+
+	private void listaReservas() {
+		List<Reserva> reservas = reservaC.listar();
+		
+		reservas.forEach(reserva -> modelo.addRow(
+				new Object[] {
+					reserva.getId(),
+					reserva.getFechaEntrada(),
+					reserva.getFechaSalida(),
+					reserva.getValor(),
+					reserva.getPago()
+				}));
+	}
+
 //Código que permite mover la ventana por la pantalla según la posición de "x" y "y"
 	 private void headerMousePressed(java.awt.event.MouseEvent evt) {
 	        xMouse = evt.getX();

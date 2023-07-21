@@ -7,11 +7,11 @@ public class Reserva {
 	private Integer id;
 	private Date fechaEntrada;
 	private Date fechaSalida;
-	private float valor;
+	private int valor;
 	private String pago;
 	
 	public Reserva(Date fechaE, Date fechaS, String valorS, String pago) {
-		float valor = Float.parseFloat(valorS);//Casteamos el String a entero para poderlo guardar en la base de datos
+		int valor = Integer.parseInt(valorS);//Casteamos el String a entero para poderlo guardar en la base de datos
 		this.fechaEntrada = fechaE;
 		this.fechaSalida = fechaS;
 		this.valor = valor;
@@ -19,7 +19,7 @@ public class Reserva {
 	}
 	
 	public Reserva(Integer id, Date fechaE, Date fechaS, String valorS, String formaPago) {
-		float valor = Float.parseFloat(valorS);
+		int valor = Integer.parseInt(valorS);
 		this.id = id;
 		this.fechaEntrada = fechaE;
 		this.fechaSalida = fechaS;
@@ -27,6 +27,14 @@ public class Reserva {
 		this.pago = formaPago;
 	}
 
+	public Reserva(int id, Date fechaE, Date fechaS, int valor, String formaPago) {
+		this.id = id;
+		this.fechaEntrada = fechaE;
+		this.fechaSalida = fechaS;
+		this.valor = valor;
+		this.pago = formaPago;
+	}
+	
 	public int getId() {
 		return this.id;
 	}

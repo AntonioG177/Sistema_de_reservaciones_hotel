@@ -12,7 +12,7 @@ import java.awt.Color;
 import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
 
-import control.HuespedesControl;
+import control.HuespedControl;
 import control.ReservaControl;
 import model.Reserva;
 
@@ -43,7 +43,6 @@ public class ReservasView extends JFrame {
 	int xMouse, yMouse;
 	private JLabel labelExit;
 	private JLabel labelAtras;
-	private HuespedesControl huspedesControl;
 	private ReservaControl reservaControl;
 
 	/**
@@ -67,7 +66,6 @@ public class ReservasView extends JFrame {
 	 */
 	public ReservasView() {
 		super("Reserva");
-		this.huspedesControl = new HuespedesControl();
 		this.reservaControl = new ReservaControl();
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ReservasView.class.getResource("/imagenes/aH-40px.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
