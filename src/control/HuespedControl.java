@@ -1,5 +1,6 @@
 package control;
 
+import java.sql.Date;
 import java.util.List;
 
 import dao.HuespedDAO;
@@ -21,6 +22,20 @@ public class HuespedControl {
 
 	public List<Huesped> listar() {
 		return huespedDAO.listar();
+	}
+
+	public List<Huesped> listar(String criterio) {
+		return huespedDAO.listar(criterio);
+	}
+
+	public void eliminar(Integer idReserva) {
+		huespedDAO.eliminar(idReserva);
+	}
+
+	public int modificar(int id, String nombre, String apellido, Date fechaN, String nacionalidad,
+			String telefono) {
+		Huesped huesped = new Huesped(id, nombre, apellido, fechaN, nacionalidad, telefono);
+		return huespedDAO.actualizar(huesped);
 	}
 
 }

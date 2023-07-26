@@ -1,6 +1,7 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,14 +31,9 @@ public class HuespedDAO {
 				statement.setString(4, huesped.getNacionalidad());
 				statement.setString(5, huesped.getTelefono());
 				statement.setInt(6, huesped.getReservaId());
-				//System.out.println(huesped.getNombre());
-				//System.out.println(huesped.getApellido());
-				//System.out.println(huesped.getFechaN());
-				//System.out.println(huesped.getNacionalidad());
-				//System.out.println(huesped.getTelefono());
-				//System.out.println(huesped.getReservaId());
+
 				statement.execute();
-				//System.out.println("Pasa");
+			
 				final ResultSet resultSet = statement.getGeneratedKeys();
 				
 				try(resultSet){
@@ -51,32 +47,104 @@ public class HuespedDAO {
 		}
 	}
 
-	public List<Huesped> listar() {
+	public List<Huesped> listar() {//Lista de huespedes
 		List<Huesped> huesped = new ArrayList<>();
 		try {
-			java.sql.PreparedStatement statement = con.prepareStatement(
+			final java.sql.PreparedStatement statement = con.prepareStatement(
 					"SELECT ID, NOMBRE, APELLIDO, FECHA_NACIMIENTO, NACIONALIDAD, TELEFONO, ID_RESERVA"
 					+ " FROM HUESPEDES");
-			statement.execute();
+			try(statement){
+				statement.execute();			
 			
-			ResultSet resulSet = statement.getResultSet();
-			
-			try(resulSet){
-				while(resulSet.next()) {
-					Huesped fila = new Huesped(
-							resulSet.getInt("ID"),
-							resulSet.getString("NOMBRE"),
-							resulSet.getString("APELLIDO"),
-							resulSet.getDate("FECHA_NACIMIENTO"),
-							resulSet.getString("NACIONALIDAD"),
-							resulSet.getString("TELEFONO"),
-							resulSet.getInt("ID_RESERVA"));
-					huesped.add(fila);
+				ResultSet resultSet = statement.getResultSet();
+				
+				try(resultSet){
+					while(resultSet.next()) {
+						Huesped fila = new Huesped(
+								resultSet.getInt("ID"),
+								resultSet.getString("NOMBRE"),
+								resultSet.getString("APELLIDO"),
+								resultSet.getDate("FECHA_NACIMIENTO"),
+								resultSet.getString("NACIONALIDAD"),
+								resultSet.getString("TELEFONO"),
+								resultSet.getInt("ID_RESERVA"));
+						huesped.add(fila);
+					}
 				}
 			}
 		}catch(SQLException e) {
 			throw new RuntimeException();
 		}
 		return huesped;
+	}
+
+	public List<Huesped> listar(String criterio) { //Busqueda por criterio
+		List<Huesped> huesped = new ArrayList<>();
+		try {
+			final java.sql.PreparedStatement statement = con.prepareStatement(
+					"SELECT ID, NOMBRE, APELLIDO, FECHA_NACIMIENTO, NACIONALIDAD, TELEFONO, ID_RESERVA "
+					+ "FROM HUESPEDES WHERE APELLIDO = ?");
+			try(statement){
+				statement.setString(1, criterio);
+				statement.execute();
+				
+				ResultSet resultSet = statement.getResultSet();
+				
+				try(resultSet){
+					while(resultSet.next()) {
+						Huesped fila = new Huesped(
+								resultSet.getInt("ID"),
+								resultSet.getString("NOMBRE"),
+								resultSet.getString("APELLIDO"),
+								resultSet.getDate("FECHA_NACIMIENTO"),
+								resultSet.getString("NACIONALIDAD"),
+								resultSet.getString("TELEFONO"),
+								resultSet.getInt("ID_RESERVA"));
+						huesped.add(fila);				
+						}
+				}
+			}
+		}catch(SQLException e) {
+			throw new RuntimeException();
+		}
+		return huesped;
+	}
+
+	public void eliminar(Integer idReserva) {
+		try {
+			final java.sql.PreparedStatement statement = con.prepareStatement(
+					"DELETE FROM HUESPEDES WHERE ID_RESERVA = ?");
+			try(statement){
+				statement.setInt(1, idReserva);
+				statement.execute();
+			}
+		}catch(SQLException e){
+			throw new RuntimeException();
+		}
+	}
+
+	public int actualizar(Huesped huesped) {
+		try {
+			java.sql.PreparedStatement statement = con.prepareStatement(
+					"UPDATE HUESPEDES SET "
+					+ " NOMBRE = ?, APELLIDO = ?, "
+					+ " NACIONALIDAD = ?, FECHA_NACIMIENTO = ?, "
+					+ " TELEFONO = ? WHERE ID = ?");
+			statement.setString(1, huesped.getNombre());
+			statement.setString(2, huesped.getApellido());
+			statement.setString(3, huesped.getNacionalidad());
+			statement.setDate(4, huesped.getFechaN());
+			statement.setString(5, huesped.getTelefono());
+			statement.setInt(6, huesped.getId());
+
+			statement.execute();
+			
+			int updateCount = statement.getUpdateCount();
+			
+			return updateCount;
+		}catch(SQLException e) {
+			throw new RuntimeException();
+		}
+		
 	}
 }

@@ -47,7 +47,7 @@ public class Reserva {
 		return fechaSalida;
 	}
 
-	public float getValor() {
+	public int getValor() {
 		return valor;
 	}
 
